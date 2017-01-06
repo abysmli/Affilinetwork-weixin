@@ -141,7 +141,7 @@ router.get('/wx/auth/ack', function (req, res) {
 });
 
 //在http请求里的处理方式
-router.get('/weixin/text', function (req, res) {
+router.post('/wx/auth/ack', function (req, res) {
   var messages = nodeWeixinMessage.messages;
 
   function text(message, res, callback, extra) {
