@@ -4,6 +4,8 @@ var nodeWeixinAuth = require('node-weixin-auth');
 var nodeWeixinMenu = require('node-weixin-menu');
 var nodeWeixinConfig = require("node-weixin-config");
 var nodeWeixinSettings = require('node-weixin-settings');
+var nodeWeixinMessage = require('node-weixin-message');
+
 var errors = require('web-errors').errors;
 var request = require('supertest');
 
@@ -47,60 +49,67 @@ nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
 //   //data.ip_list获取IP列表
 // });
 
-var menu = {
-  "button": [
-    {
-      "type": "view",
-      "name": "Allhaha官网",
-      "url": "http://www.allhaha.com/"
-    },
-    {
-      "name": "功能菜单",
-      "sub_button": [
-        {
-          "type": "click",
-          "name": "扫一扫",
-          "key": "V1001_GOOD"
-        },
-        {
-          "type": "view",
-          "name": "EAN录入",
-          "url": "http://www.allhaha.com/EAN/"
-        },
-        {
-          "type": "view",
-          "name": "EAN查询",
-          "url": "http://www.allhaha.com/"
-        }
-      ]
-    }
-  ]
-};
+// 微信服务器返回的ack信息是HTTP的GET方法实现的
+router.get('/wx/setMenu', function (req, res) {
+  var menu = {
+    "button": [
+      {
+        "type": "view",
+        "name": "Allhaha官网",
+        "url": "http://www.allhaha.com/"
+      },
+      {
+        "name": "功能菜单",
+        "sub_button": [
+          {
+            "type": "scancode_waitmsg",
+            "name": "扫一扫",
+            "key": "rselfmenu_0_0"
+          },
+          {
+            "type": "view",
+            "name": "EAN录入",
+            "url": "http://www.allhaha.com/EAN/"
+          },
+          {
+            "type": "view",
+            "name": "EAN查询",
+            "url": "http://www.allhaha.com/"
+          }
+        ]
+      }
+    ]
+  };
 
-nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
-  //error === true
-  //data.errcode === 0
-  //data.errmsg === 'ok'
+  nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
+    //error === true
+    console.log(data.errcode);
+    console.log(data.errmsg);
+    //data.errcode === 0
+    //data.errmsg === 'ok'
+  });
+
+  // nodeWeixinMenu.get(app, function (error, data) {
+  //   //error === true
+  //   //typeof data.menu
+  //   //typeof data.menu.button
+  // });
+
+  // nodeWeixinMenu.customize(app, function (error, data) {
+  //   //error === true
+  //   //data.is_menu_open === 1
+  //   //data.selfmenu_info
+  //   //data.selfmenu_info.button
+  // });
+
+  // nodeWeixinMenu.remove(app, function (error, data) {
+  //   //error === true
+  //   //data.errcode
+  //   //data.errmsg
+  // });
 });
 
-// nodeWeixinMenu.get(app, function (error, data) {
-//   //error === true
-//   //typeof data.menu
-//   //typeof data.menu.button
-// });
 
-// nodeWeixinMenu.customize(app, function (error, data) {
-//   //error === true
-//   //data.is_menu_open === 1
-//   //data.selfmenu_info
-//   //data.selfmenu_info.button
-// });
-
-// nodeWeixinMenu.remove(app, function (error, data) {
-//   //error === true
-//   //data.errcode
-//   //data.errmsg
-// });
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
 router.get('/wx/auth/ack', function (req, res) {
@@ -122,6 +131,39 @@ router.get('/wx/auth/ack', function (req, res) {
         break;
     }
   });
+});
+
+//在http请求里的处理方式
+router.get('weixin/text', function (req, res) {
+  var messages = nodeWeixinMessage.messages;
+
+  function text(message, res, callback, extra) {
+    //message => 解析后的JSON
+    //res => res
+    //callback => callback
+    //extra => 'some data',
+
+    //Extra
+    res.send(message);
+  }
+
+  //多次侦听相同的回调函数只会被调用一次
+  messages.on.text(text);
+  messages.on.text(text);
+  messages.on.text(text);
+  messages.onXML(req.body, res, function callback(message) {
+    //After message handled.
+  });
+
+  //处理扫描带参数二维码事件
+  messages.event.on.scan(function (message) {
+
+  });
+  //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
+  //唯一不同的是req.body会被解析成JSON
+  //,
+  //'some data');
+
 });
 
 module.exports = router;
