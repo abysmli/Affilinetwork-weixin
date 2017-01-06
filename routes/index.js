@@ -50,51 +50,51 @@ nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
 // });
 
 router.get('/', function (req, res) {
-  res.send("Hello! Willcome to weixin Affilinet");
+  res.send("Hello! Willcome to weixin Affilinet！");
 });
-// 微信服务器返回的ack信息是HTTP的GET方法实现的
-router.get('/wx/setMenu', function (req, res) {
-  var menu = {
-    "button": [
-      {
-        "type": "view",
-        "name": "Allhaha官网",
-        "url": "http://www.allhaha.com/"
-      },
-      {
-        "name": "功能菜单",
-        "sub_button": [
-          {
-            "type": "scancode_waitmsg",
-            "name": "扫一扫",
-            "key": "rselfmenu_0_0"
-          },
-          {
-            "type": "view",
-            "name": "EAN录入",
-            "url": "http://www.allhaha.com/EAN/"
-          },
-          {
-            "type": "view",
-            "name": "EAN查询",
-            "url": "http://www.allhaha.com/"
-          }
-        ]
-      }
-    ]
-  };
 
-  nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
-    //error === true
-    console.log(data.errcode);
-    console.log(data.errmsg);
-    res.json({
-      errcode: data.errcode,
-      errmsg: data.errmsg
-    });
-    //data.errcode === 0
-    //data.errmsg === 'ok'
+
+
+var menu = {
+  "button": [
+    {
+      "type": "view",
+      "name": "Allhaha官网",
+      "url": "http://www.allhaha.com/"
+    },
+    {
+      "name": "功能菜单",
+      "sub_button": [
+        {
+          "type": "scancode_waitmsg",
+          "name": "扫一扫",
+          "key": "rselfmenu_0_0"
+        },
+        {
+          "type": "view",
+          "name": "EAN录入",
+          "url": "http://www.allhaha.com/EAN/"
+        },
+        {
+          "type": "view",
+          "name": "EAN查询",
+          "url": "http://www.allhaha.com/"
+        }
+      ]
+    }
+  ]
+};
+
+nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
+  //error === true
+  console.log(data.errcode);
+  console.log(data.errmsg);
+  res.json({
+    errcode: data.errcode,
+    errmsg: data.errmsg
   });
+  //data.errcode === 0
+  //data.errmsg === 'ok'
 
   // nodeWeixinMenu.get(app, function (error, data) {
   //   //error === true
@@ -143,6 +143,14 @@ router.get('/wx/auth/ack', function (req, res) {
 //在http请求里的处理方式
 router.post('/wx/auth/ack', function (req, res) {
   var data = nodeWeixinAuth.extract(req.query);
+  console.log(1);
+  console.log(req.query);
+  console.log(2);
+  console.log(data);
+  console.log(3);
+  console.log(req.body);
+  console.log(4);
+  console.log(JSON.stringify(req));
   nodeWeixinAuth.ack(app.token, data, function (error, data) {
     console.log(error);
     console.log(data);
