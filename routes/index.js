@@ -143,6 +143,7 @@ router.get('/wx/auth/ack', function (req, res) {
 //在http请求里的处理方式
 router.post('/wx/auth/ack', function (req, res) {
   var messages = nodeWeixinMessage.messages;
+  console.log(req.body);
 
   function text(message, res, callback, extra) {
     //message => 解析后的JSON
@@ -159,12 +160,14 @@ router.post('/wx/auth/ack', function (req, res) {
   messages.on.text(text);
   messages.on.text(text);
   messages.onXML(req.body, res, function callback(message) {
-    //After message handled.
+    console.log("message:!");
+    console.log(message);
   });
 
   //处理扫描带参数二维码事件
   messages.event.on.scan(function (message) {
-
+    console.log("message:x");
+    console.log(message);
   });
   //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
   //唯一不同的是req.body会被解析成JSON
