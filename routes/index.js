@@ -49,6 +49,9 @@ nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
 //   //data.ip_list获取IP列表
 // });
 
+router.get('/', function (req, res) {
+  res.send("Hello! Willcome to weixin Affilinet");
+});
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
 router.get('/wx/setMenu', function (req, res) {
   var menu = {
@@ -85,6 +88,10 @@ router.get('/wx/setMenu', function (req, res) {
     //error === true
     console.log(data.errcode);
     console.log(data.errmsg);
+    res.json({
+      errcode: data.errcode,
+      errmsg: data.errmsg
+    });
     //data.errcode === 0
     //data.errmsg === 'ok'
   });
@@ -134,7 +141,7 @@ router.get('/wx/auth/ack', function (req, res) {
 });
 
 //在http请求里的处理方式
-router.get('weixin/text', function (req, res) {
+router.get('/weixin/text', function (req, res) {
   var messages = nodeWeixinMessage.messages;
 
   function text(message, res, callback, extra) {
