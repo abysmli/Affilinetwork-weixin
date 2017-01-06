@@ -144,6 +144,7 @@ router.get('/wx/auth/ack', function (req, res) {
 router.post('/wx/auth/ack', function (req, res) {
   var data = nodeWeixinAuth.extract(req.query);
   nodeWeixinAuth.ack(app.token, data, function (error, data) {
+    console.log(error);
     console.log(data);
     if (!error) {
       res.send(data);
