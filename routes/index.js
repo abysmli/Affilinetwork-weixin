@@ -14,20 +14,12 @@ var app = {
   secret: '391dbdd46e663f8e71f53850f6ce1585',
   token: 'allhaha'
 };
-// var app = {
-//   id: 'wx616276dfaab6b39d',
-//   secret: 'b129240e6a3f919b817f013ca37728a3',
-//   token: 'allhaha'
-// };
+
 nodeWeixinConfig.app.init(app);
 
-nodeWeixinSettings.registerSet(function () {
+nodeWeixinSettings.registerSet(function () { });
 
-});
-
-nodeWeixinSettings.registerGet(function () {
-
-});
+nodeWeixinSettings.registerGet(function () { });
 
 // 调整TIME_GAP来避免重复请求
 // 默认是500秒，基本上不会出现失效的情况
@@ -37,17 +29,6 @@ nodeWeixinAuth.TIME_GAP = 60;
 nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
   var accessToken = json.access_token;
 });
-
-// //自动获得accessToken，并发送需要accessToken的请求
-// nodeWeixinAuth.determine(nodeWeixinSettings, app, function () {
-//   //这里添加发送请求的代码
-// });
-
-// //获取服务器IP
-// nodeWeixinAuth.ips(nodeWeixinSettings, app, function (error, data) {
-//   //error == false
-//   //data.ip_list获取IP列表
-// });
 
 router.get('/', function (req, res) {
   res.send("Hello! Willcome to weixin Affilinet！");
@@ -73,21 +54,9 @@ var menu = {
           "sub_button": []
         },
         {
-          "type": "scancode_push",
-          "name": "扫一扫2",
-          "key": "rselfmenu_0_1",
-          "sub_button": []
-        },
-        {
           "type": "view",
-          "name": "EAN录入",
+          "name": "EAN查询录入",
           "url": "http://www.allhaha.com/EAN/",
-          "sub_button": []
-        },
-        {
-          "type": "view",
-          "name": "EAN查询",
-          "url": "http://www.allhaha.com/",
           "sub_button": []
         }
       ]
@@ -96,34 +65,8 @@ var menu = {
 };
 
 nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
-  //error === true
-  console.log(data.errcode);
-  console.log(data.errmsg);
-  res.json({
-    errcode: data.errcode,
-    errmsg: data.errmsg
-  });
   //data.errcode === 0
   //data.errmsg === 'ok'
-
-  // nodeWeixinMenu.get(app, function (error, data) {
-  //   //error === true
-  //   //typeof data.menu
-  //   //typeof data.menu.button
-  // });
-
-  // nodeWeixinMenu.customize(app, function (error, data) {
-  //   //error === true
-  //   //data.is_menu_open === 1
-  //   //data.selfmenu_info
-  //   //data.selfmenu_info.button
-  // });
-
-  // nodeWeixinMenu.remove(app, function (error, data) {
-  //   //error === true
-  //   //data.errcode
-  //   //data.errmsg
-  // });
 });
 
 
@@ -152,23 +95,6 @@ router.get('/wx/auth/ack', function (req, res) {
 
 //在http请求里的处理方式
 router.post('/wx/auth/ack', function (req, res) {
-  // var data = nodeWeixinAuth.extract(req.query);
-  // console.log(1);
-  // console.log(req.query);
-  // console.log(2);
-  // console.log(data);
-  // console.log(3);
-  // console.log(req.body);
-  // console.log(4);
-  // console.log(JSON.stringify(req));
-  // nodeWeixinAuth.ack(app.token, data, function (error, data) {
-  //   console.log(error);
-  //   console.log(data);
-  //   if (!error) {
-  //     res.send(data);
-  //     return;
-  //   }
-  // });
   var reply = nodeWeixinMessage.reply;
   var message = req.body;
   if (message.xml !== undefined) {
@@ -187,12 +113,6 @@ router.post('/wx/auth/ack', function (req, res) {
     }
   }
   return res.send("抱歉，只能扫EAN13国际码！");
-
-  
-
-
-
-
 });
 
 module.exports = router;
