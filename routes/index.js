@@ -60,7 +60,8 @@ var menu = {
     {
       "type": "view",
       "name": "Allhaha官网",
-      "url": "http://www.allhaha.com/"
+      "url": "http://www.allhaha.com/",
+      "sub_button": []
     },
     {
       "name": "功能菜单",
@@ -68,17 +69,26 @@ var menu = {
         {
           "type": "scancode_waitmsg",
           "name": "扫一扫",
-          "key": "rselfmenu_0_0"
+          "key": "rselfmenu_0_0",
+          "sub_button": []
+        },
+        {
+          "type": "scancode_push",
+          "name": "扫一扫2",
+          "key": "rselfmenu_0_1",
+          "sub_button": []
         },
         {
           "type": "view",
           "name": "EAN录入",
-          "url": "http://www.allhaha.com/EAN/"
+          "url": "http://www.allhaha.com/EAN/",
+          "sub_button": []
         },
         {
           "type": "view",
           "name": "EAN查询",
-          "url": "http://www.allhaha.com/"
+          "url": "http://www.allhaha.com/",
+          "sub_button": []
         }
       ]
     }
@@ -142,54 +152,54 @@ router.get('/wx/auth/ack', function (req, res) {
 
 //在http请求里的处理方式
 router.post('/wx/auth/ack', function (req, res) {
-  var data = nodeWeixinAuth.extract(req.query);
-  console.log(1);
-  console.log(req.query);
-  console.log(2);
-  console.log(data);
-  console.log(3);
-  console.log(req.body);
-  console.log(4);
-  console.log(JSON.stringify(req));
-  nodeWeixinAuth.ack(app.token, data, function (error, data) {
-    console.log(error);
-    console.log(data);
-    if (!error) {
-      res.send(data);
-      return;
-    }
-  });
-  // var messages = nodeWeixinMessage.messages;
+  // var data = nodeWeixinAuth.extract(req.query);
+  // console.log(1);
+  // console.log(req.query);
+  // console.log(2);
+  // console.log(data);
+  // console.log(3);
   // console.log(req.body);
-
-  // function text(message, res, callback, extra) {
-  //   //message => 解析后的JSON
-  //   //res => res
-  //   //callback => callback
-  //   //extra => 'some data',
-
-  //   //Extra
-  //   res.send(message);
-  // }
-
-  // //多次侦听相同的回调函数只会被调用一次
-  // messages.on.text(text);
-  // messages.on.text(text);
-  // messages.on.text(text);
-  // messages.onXML(req.body, res, function callback(message) {
-  //   console.log("message:!");
-  //   console.log(message);
+  // console.log(4);
+  // console.log(JSON.stringify(req));
+  // nodeWeixinAuth.ack(app.token, data, function (error, data) {
+  //   console.log(error);
+  //   console.log(data);
+  //   if (!error) {
+  //     res.send(data);
+  //     return;
+  //   }
   // });
+  var messages = nodeWeixinMessage.messages;
+  console.log(req.body);
 
-  // //处理扫描带参数二维码事件
-  // messages.event.on.scan(function (message) {
-  //   console.log("message:x");
-  //   console.log(message);
-  // });
-  // //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
-  // //唯一不同的是req.body会被解析成JSON
-  // //,
-  // //'some data');
+  function text(message, res, callback, extra) {
+    //message => 解析后的JSON
+    //res => res
+    //callback => callback
+    //extra => 'some data',
+
+    //Extra
+    res.send(message);
+  }
+
+  //多次侦听相同的回调函数只会被调用一次
+  messages.on.text(text);
+  messages.on.text(text);
+  messages.on.text(text);
+  messages.onXML(req.body, res, function callback(message) {
+    console.log("message:!");
+    console.log(message);
+  });
+
+  //处理扫描带参数二维码事件
+  messages.event.on.scan(function (message) {
+    console.log("message:x");
+    console.log(message);
+  });
+  //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
+  //唯一不同的是req.body会被解析成JSON
+  //,
+  //'some data');
 
 });
 
