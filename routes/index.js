@@ -173,12 +173,13 @@ router.post('/wx/auth/ack', function (req, res) {
   var message = req.body;
   if (message.xml !== undefined) {
     if (message.xml.ScanCodeInfo !== undefined) {
+      console.log(message.xml.ScanCodeInfo.ScanResult);
       var scanCodes = message.xml.ScanCodeInfo.ScanResult.split(",");
-      console.log(scanCode[1]);
+      console.log(scanCodes[1]);
       //回复图文
       var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
         title: '点击查找产品',
-        description: '查询产品' + scanCode[1],
+        description: '查询产品' + scanCodes[1],
         picUrl: 'http://image5.tuku.cn/wallpaper/Fantasy%20Wallpapers/817_1440x900.jpg',
         url: 'http://allhaha.com'
       }]);
