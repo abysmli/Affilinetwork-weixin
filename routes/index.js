@@ -170,37 +170,38 @@ router.post('/wx/auth/ack', function (req, res) {
   //   }
   // });
   var messages = nodeWeixinMessage.messages;
-  console.log(req);
+  // console.log(req);
   console.log(req.headers);
+  console.log(req.body);
+  res.json(req.body);
+  // function text(message, res, callback, extra) {
+  //   //message => 解析后的JSON
+  //   //res => res
+  //   //callback => callback
+  //   //extra => 'some data',
 
-  function text(message, res, callback, extra) {
-    //message => 解析后的JSON
-    //res => res
-    //callback => callback
-    //extra => 'some data',
+  //   //Extra
+  //   res.send(message);
+  // }
 
-    //Extra
-    res.send(message);
-  }
+  // //多次侦听相同的回调函数只会被调用一次
+  // messages.on.text(text);
+  // messages.on.text(text);
+  // messages.on.text(text);
+  // messages.onXML(req.body, res, function callback(message) {
+  //   console.log("message:!");
+  //   console.log(message);
+  // });
 
-  //多次侦听相同的回调函数只会被调用一次
-  messages.on.text(text);
-  messages.on.text(text);
-  messages.on.text(text);
-  messages.onXML(req.body, res, function callback(message) {
-    console.log("message:!");
-    console.log(message);
-  });
-
-  //处理扫描带参数二维码事件
-  messages.event.on.scan(function (message) {
-    console.log("message:x");
-    console.log(message);
-  });
-  //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
-  //唯一不同的是req.body会被解析成JSON
-  //,
-  //'some data');
+  // //处理扫描带参数二维码事件
+  // messages.event.on.scan(function (message) {
+  //   console.log("message:x");
+  //   console.log(message);
+  // });
+  // //后面可以接系统允许的最大数量的参数，只要跟text的处理函数一一对应就可以了。
+  // //唯一不同的是req.body会被解析成JSON
+  // //,
+  // //'some data');
 
 });
 
