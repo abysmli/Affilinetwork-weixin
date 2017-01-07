@@ -150,6 +150,14 @@ router.get('/wx/auth/ack', function (req, res) {
   });
 });
 
+
+var http = require('http')  
+
+http.get(options, function (response) {  
+  response.setEncoding('utf8')  
+  response.on('data', console.log)  
+  response.on('error', console.error)  
+})
 //在http请求里的处理方式
 router.post('/wx/auth/ack', function (req, res) {
   // var data = nodeWeixinAuth.extract(req.query);
@@ -170,7 +178,8 @@ router.post('/wx/auth/ack', function (req, res) {
   //   }
   // });
   var messages = nodeWeixinMessage.messages;
-  console.log(req.body);
+  console.log(req);
+  console.log(req.headers);
 
   function text(message, res, callback, extra) {
     //message => 解析后的JSON
