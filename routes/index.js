@@ -169,11 +169,27 @@ router.post('/wx/auth/ack', function (req, res) {
   //     return;
   //   }
   // });
-  var messages = nodeWeixinMessage.messages;
-  // console.log(req);
-  console.log(req.headers);
-  console.log(req.body);
-  res.send(req.body);
+  var reply = nodeWeixinMessage.reply;
+  var message = req.body;
+  if (message.xml !== undefined) {
+    if (message.xml.ScanCodeInfo !== undefined) {
+      var scanCodes = message.xml.ScanCodeInfo.ScanResult.split(",");
+      console.log(scanCode[1]);
+      //回复图文
+      var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
+        title: '点击查找产品',
+        description: '查询产品' + scanCode[1],
+        picUrl: 'http://image5.tuku.cn/wallpaper/Fantasy%20Wallpapers/817_1440x900.jpg',
+        url: 'http://allhaha.com'
+      }]);
+      return res.send(news);
+    }
+  }
+  return res.send("抱歉，只能扫EAN13国际码！");
+
+  
+
+
 
 
 });
