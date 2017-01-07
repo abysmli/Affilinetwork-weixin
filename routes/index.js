@@ -106,8 +106,8 @@ router.post('/wx/auth/ack', function (req, res) {
       var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
         title: '点击查找产品',
         description: '查询产品' + scanCodes[1],
-        picUrl: 'http://image5.tuku.cn/wallpaper/Fantasy%20Wallpapers/817_1440x900.jpg',
-        url: 'http://allhaha.com'
+        picUrl: 'http://allhahaha.com/box.jpg',
+        url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
       }]);
       return res.send(news);
     }
