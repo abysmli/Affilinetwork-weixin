@@ -99,10 +99,7 @@ router.post('/wx/auth/ack', function (req, res) {
   if (message.xml !== undefined) {
     if (message.xml.ScanCodeInfo !== undefined) {
       var scanCodes = message.xml.ScanCodeInfo.ScanResult.split(",");
-      if (scanCodes[0] != "EAN_13") {
-        var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "抱歉，只能扫EAN13国际码！");
-        return res.send(text);
-      } else {
+
         //回复图文
         request('http://allhaha.com/weixin/prerequest?value=' + scanCodes[1], function (error, response, body) {
           if (!error && response.statusCode == 200) {
@@ -122,7 +119,7 @@ router.post('/wx/auth/ack', function (req, res) {
             }
           }
         });
-      }
+      
     } else {
       var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "请扫描产品条码！");
       return res.send(text);
