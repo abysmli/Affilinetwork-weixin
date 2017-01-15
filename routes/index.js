@@ -108,7 +108,7 @@ router.post('/wx/auth/ack', function (req, res) {
             var result = JSON.parse(body);
             console.log(result);
             if(result.Result == 'success') {
-                var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
+              var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
                 title: result.Title,
                 description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + '\n' + '产品EAN代码： ' + scanCodes[1],
                 picUrl: result.Image,
@@ -116,14 +116,17 @@ router.post('/wx/auth/ack', function (req, res) {
               }]);
               return res.send(news);
             } else {
-              res.send(result.Result);
+              return res.send(result.Result);
             }
           }
         });
       }
+    } else {
+      return res.send("请扫描产品条码！");
     }
+  } else {
+    return res.send("请扫描产品条码！");
   }
-  return res.send("请扫描产品条码！");
 });
 
 module.exports = router;
