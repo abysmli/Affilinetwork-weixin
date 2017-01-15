@@ -105,17 +105,18 @@ router.post('/wx/auth/ack', function (req, res) {
         //回复图文
         request('http://allhaha.com/weixin/prerequest?value=' + scanCodes[1], function (error, response, body) {
           if (!error && response.statusCode == 200) {
-            console.log(body);
-            if(body.Result == 'success') {
+            var result = JSON.parse(body);
+            console.log(result);
+            if(result.Result == 'success') {
                 var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
-                title: body.Title,
-                description: '品牌： ' + body.Brand + '\n' + '参考价格： ' + body.Price + '\n' + '产品EAN代码： ' + scanCodes[1],
-                picUrl: body.Image,
+                title: result.Title,
+                description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + '\n' + '产品EAN代码： ' + scanCodes[1],
+                picUrl: result.Image,
                 url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
               }]);
               return res.send(news);
             } else {
-              res.send(body.Result);
+              res.send(result.Result);
             }
           }
         });
