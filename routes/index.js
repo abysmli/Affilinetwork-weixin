@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var request = require('request');
 var nodeWeixinAuth = require('node-weixin-auth');
 var nodeWeixinMenu = require('node-weixin-menu');
 var nodeWeixinConfig = require("node-weixin-config");
@@ -7,8 +8,6 @@ var nodeWeixinSettings = require('node-weixin-settings');
 var nodeWeixinMessage = require('node-weixin-message');
 
 var errors = require('web-errors').errors;
-var request = require('supertest');
-
 var app = {
   id: 'wx499abe9f9831315b',
   secret: '391dbdd46e663f8e71f53850f6ce1585',
@@ -99,20 +98,31 @@ router.post('/wx/auth/ack', function (req, res) {
   var message = req.body;
   if (message.xml !== undefined) {
     if (message.xml.ScanCodeInfo !== undefined) {
-      console.log(message.xml.ScanCodeInfo.ScanResult);
       var scanCodes = message.xml.ScanCodeInfo.ScanResult.split(",");
-      console.log(scanCodes[1]);
-      //回复图文
-      var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
-        title: '点击查找产品',
-        description: '查询产品' + scanCodes[1],
-        picUrl: 'http://allhahaha.com/box.jpg',
-        url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
-      }]);
-      return res.send(news);
+      if (scanCodes[0] != "EAN_13") {
+        return res.send("抱歉，只能扫EAN13国际码！");
+      } else {
+        //回复图文
+        request('http://allhaha.com/weixin/prerequest?value=' + scanCodes[1], function (error, response, body) {
+          if (!error && response.statusCode == 200) {
+            console.log(body);
+            if(body.Result == 'success') {
+                var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
+                title: body.Title,
+                description: '品牌： ' + body.Brand + '\n' + '参考价格： ' + body.Price + '\n' + '产品EAN代码： ' + scanCodes[1],
+                picUrl: body.Image,
+                url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
+              }]);
+              return res.send(news);
+            } else {
+              res.send(body.Result);
+            }
+          }
+        });
+      }
     }
   }
-  return res.send("抱歉，只能扫EAN13国际码！");
+  return res.send("请扫描产品条码！");
 });
 
 module.exports = router;
