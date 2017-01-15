@@ -113,7 +113,7 @@ router.post('/wx/auth/ack', function (req, res) {
                 title: result.Title,
                 description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + ' 欧元\n' + '产品EAN代码： ' + scanCodes[1],
                 picUrl: result.Image,
-                url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
+                url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1] + '&from=' + message.xml.FromUserName + '&type=barcode',
               }]);
               return res.send(news);
             } else {
