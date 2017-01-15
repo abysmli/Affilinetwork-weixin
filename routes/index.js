@@ -117,7 +117,7 @@ router.post('/wx/auth/ack', function (req, res) {
               }]);
               return res.send(news);
             } else {
-              var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, result.Result);
+              var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "产品未找到，我们将及时添加!");
               return res.send(text);
             }
           }
