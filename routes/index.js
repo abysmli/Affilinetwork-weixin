@@ -100,32 +100,36 @@ router.post('/wx/auth/ack', function (req, res) {
     if (message.xml.ScanCodeInfo !== undefined) {
       var scanCodes = message.xml.ScanCodeInfo.ScanResult.split(",");
       if (scanCodes[0] != "EAN_13") {
-        return res.send("抱歉，只能扫EAN13国际码！");
+        var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "抱歉，只能扫EAN13国际码！");
+        return res.send(text);
       } else {
         //回复图文
         request('http://allhaha.com/weixin/prerequest?value=' + scanCodes[1], function (error, response, body) {
           if (!error && response.statusCode == 200) {
             var result = JSON.parse(body);
             console.log(result);
-            if(result.Result == 'success') {
+            if (result.Result == 'success') {
               var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
                 title: result.Title,
-                description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + '\n' + '产品EAN代码： ' + scanCodes[1],
+                description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + ' 欧元\n' + '产品EAN代码： ' + scanCodes[1],
                 picUrl: result.Image,
                 url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1]
               }]);
               return res.send(news);
             } else {
-              return res.send(result.Result);
+              var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, result.Result);
+              return res.send(text);
             }
           }
         });
       }
     } else {
-      return res.send("请扫描产品条码！");
+      var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "请扫描产品条码！");
+      return res.send(text);
     }
   } else {
-    return res.send("请扫描产品条码！");
+    var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "请扫描产品条码！");
+    return res.send(text);
   }
 });
 
