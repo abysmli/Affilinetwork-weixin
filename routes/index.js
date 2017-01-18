@@ -116,9 +116,12 @@ router.post('/wx/auth/ack', function (req, res) {
           console.log(result);
           if (result.Result == 'success') {
             console.log('Success');
+            var description = result.Brand === "" ? "" : '品牌： ' + result.Brand + '\n';
+            description += result.Price === "" ? "" : '参考价格： ' + result.Price + ' 欧元\n';
+            description += '产品EAN代码： ' + scanCodes[1];
             var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
               title: result.Title,
-              description: '品牌： ' + result.Brand + '\n' + '参考价格： ' + result.Price + ' 欧元\n' + '产品EAN代码： ' + scanCodes[1],
+              description: description,
               picUrl: result.Image,
               url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1] + '&from=' + message.xml.FromUserName + '&type=barcode',
             }]);
