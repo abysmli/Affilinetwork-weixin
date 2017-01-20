@@ -115,7 +115,7 @@ router.post('/wx/auth/ack', function (req, res) {
         }
       });
 
-    } else if (xml.Event == 'subscribe') {
+    } else if (message.xml.Event == 'subscribe') {
       var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, '欢迎来到"欧哈哈"购物王国，欧哈哈，为您发现最低！\n"欧哈哈"比价网www.allhaha.com为欧洲第一款全中文商品比价网站。齐全的商品信息，中文的介绍评论，清晰的价格对比，简明的购物链接，"欧哈哈"为您打造在欧洲最便捷的中文比价服务和线上购物体验。在这里，您可以了解到欧洲任何一款产品最低的价格信息和购买链接；在这里，只为您发现最低。当然，我们的微信公众号“欧哈哈”也同步上线，并于新春佳节推出了"扫码比价"功能，欧洲所有商品一扫即出，中文的服务，便捷的操作，价格一目了然。\n现我们推出新年大抽奖，请扫如下活动码进入商品页面，点击用户评论即可参与赢取该商品活动。');
       return res.send(text);
     } else {
