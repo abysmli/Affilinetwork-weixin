@@ -90,7 +90,7 @@ router.post('/wx/auth/ack', function (req, res) {
 
       console.time("HTTPRequest:");
       var eanCode = scanCodes[1].length == 12 ? "0" + scanCodes[1] : scanCodes[1];
-      request('http://allhaha.com/weixin/prerequest?value=' + eanCode, function (error, response, body) {
+      request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
         console.timeEnd("HTTPRequest:");
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
