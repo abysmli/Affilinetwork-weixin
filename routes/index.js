@@ -89,7 +89,8 @@ router.post('/wx/auth/ack', function (req, res) {
       }
 
       console.time("HTTPRequest:");
-      request('http://allhaha.com/weixin/prerequest?value=' + scanCodes[1], function (error, response, body) {
+      var eanCode = scanCodes[1].length == 12 ? "0" + scanCodes[1] : scanCodes[1];
+      request('http://allhaha.com/weixin/prerequest?value=' + eanCode, function (error, response, body) {
         console.timeEnd("HTTPRequest:");
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
@@ -99,12 +100,12 @@ router.post('/wx/auth/ack', function (req, res) {
             console.log('Success');
             var description = result.Brand === "" ? "" : '品牌： ' + result.Brand + '\n';
             description += result.Price === "" ? "" : '参考价格： ' + result.Price + ' 欧元\n';
-            description += '产品EAN代码： ' + scanCodes[1];
+            description += '产品EAN代码： ' + eanCode;
             var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
               title: result.Title,
               description: description,
               picUrl: result.Image,
-              url: 'http://allhaha.com/weixin/ean?value=' + scanCodes[1] + '&from=' + message.xml.FromUserName + '&type=barcode',
+              url: 'http://allhaha.com/weixin/ean?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode',
             }]);
             return res.send(news);
           } else {
