@@ -95,6 +95,7 @@ router.post('/wx/auth/ack', function (req, res) {
       request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
         console.timeEnd("HTTPRequest:");
         nodeWeixinUser.profile(nodeWeixinSettings, app, message.xml.FromUserName, function (error, data) {
+          console.log(error);
           console.log(data);
         });
         if (!error && response.statusCode == 200) {
