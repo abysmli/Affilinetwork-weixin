@@ -7,6 +7,7 @@ var nodeWeixinConfig = require("node-weixin-config");
 var nodeWeixinSettings = require('node-weixin-settings');
 var nodeWeixinMessage = require('node-weixin-message');
 
+var accessToken = "";
 var errors = require('web-errors').errors;
 var app = {
   id: 'wx499abe9f9831315b',
@@ -26,7 +27,7 @@ nodeWeixinAuth.TIME_GAP = 60;
 
 //手动得到accessToken
 nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
-  var accessToken = json.access_token;
+  accessToken = json.access_token;
 });
 
 router.get('/', function (req, res) {
@@ -92,6 +93,10 @@ router.post('/wx/auth/ack', function (req, res) {
       var eanCode = scanCodes[1].length == 12 ? "0" + scanCodes[1] : scanCodes[1];
       request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
         console.timeEnd("HTTPRequest:");
+        request('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + accessToken + '&openid=' + message.xml.FromUserName + '&lang=zh_CN', function (error, response, body) {
+          var result = JSON.parse(body);
+          console.log(result);
+        });
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
           console.log("Result: ");
@@ -128,5 +133,7 @@ router.post('/wx/auth/ack', function (req, res) {
     return res.send(text);
   }
 });
+
+https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
 
 module.exports = router;
