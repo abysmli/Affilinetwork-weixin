@@ -6,6 +6,7 @@ var nodeWeixinMenu = require('node-weixin-menu');
 var nodeWeixinConfig = require("node-weixin-config");
 var nodeWeixinSettings = require('node-weixin-settings');
 var nodeWeixinMessage = require('node-weixin-message');
+var nodeWeixinUser = require('node-weixin-user');
 
 var accessToken = "";
 var errors = require('web-errors').errors;
@@ -93,9 +94,8 @@ router.post('/wx/auth/ack', function (req, res) {
       var eanCode = scanCodes[1].length == 12 ? "0" + scanCodes[1] : scanCodes[1];
       request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
         console.timeEnd("HTTPRequest:");
-        request('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + accessToken + '&openid=' + message.xml.FromUserName + '&lang=zh_CN', function (error, response, body) {
-          var result = JSON.parse(body);
-          console.log(result);
+        nodeWeixinUser.profile(nodeWeixinSettings, app, message.xml.FromUserName, function (error, data) {
+          console.log(data);
         });
         if (!error && response.statusCode == 200) {
           var result = JSON.parse(body);
