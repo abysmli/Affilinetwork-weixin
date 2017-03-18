@@ -139,6 +139,4 @@ router.post('/wx/auth/ack', function (req, res) {
   }
 });
 
-https://api.weixin.qq.com/cgi-bin/user/info?access_token=ACCESS_TOKEN&openid=OPENID&lang=zh_CN
-
 module.exports = router;
