@@ -30,7 +30,7 @@ nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
 });
 
 router.get('/', function (req, res) {
-  res.send("Hello! Willcome to weixin Affilinet！");
+  res.send("Hello! Willcome to Allhaha website weixin API！");
 });
 
 var menu = {

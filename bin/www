@@ -12,7 +12,7 @@ var http = require('http');
 
 var server_options = {
   key: fs.readFileSync(process.cwd() + '/crt/allhahaha.key'),
-  cert: fs.readFileSync(process.cwd() + '/crt/allhahaha.crt'),
+  cert: fs.readFileSync(process.cwd() + '/crt/allhahaha.pem'),
 }
 
 /**
