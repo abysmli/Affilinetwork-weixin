@@ -6,20 +6,32 @@
 
 var app = require('../app');
 var debug = require('debug')('affilinetwork-weixin:server');
+var fs = require('fs');
+var https = require('https');
 var http = require('http');
+
+var server_options = {
+  key: fs.readFileSync(process.cwd() + '/crt/allhahaha.key'),
+  cert: fs.readFileSync(process.cwd() + '/crt/allhahaha.crt'),
+}
 
 /**
  * Get port from environment and store in Express.
  */
-
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
+
 
 /**
  * Create HTTP server.
  */
+if (app.get('env') === 'production') {
+  https.createServer(server_options, app).listen(443);
+}
 
-var server = http.createServer(app);
+var server = http.createServer(app).listen(app.get('port'), function () {
+  debug('Express server listening on port ' + server.address().port);
+});
 
 /**
  * Listen on provided port, on all network interfaces.
