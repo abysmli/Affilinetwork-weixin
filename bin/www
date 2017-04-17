@@ -18,7 +18,7 @@ var server_options = {
 /**
  * Get port from environment and store in Express.
  */
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 
@@ -26,7 +26,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 if (app.get('env') === 'production') {
-  https.createServer(server_options, app).listen(443);
+  https.createServer(server_options, app).listen(process.env.HTTPSPORT || '3002');
 }
 
 var server = http.createServer(app).listen(app.get('port'), function () {
