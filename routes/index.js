@@ -52,7 +52,7 @@ nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
 
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
-router.get('/wx/auth/ack', function (req, res) {
+router.get('/auth/ack', function (req, res) {
   var data = nodeWeixinAuth.extract(req.query);
   nodeWeixinAuth.ack(app.token, data, function (error, data) {
     if (!error) {
@@ -74,7 +74,7 @@ router.get('/wx/auth/ack', function (req, res) {
 });
 
 //在http请求里的处理方式
-router.post('/wx/auth/ack', function (req, res) {
+router.post('/auth/ack', function (req, res) {
   var reply = nodeWeixinMessage.reply;
   var message = req.body;
   console.log("Message: ");
