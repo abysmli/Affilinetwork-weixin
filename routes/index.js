@@ -16,35 +16,39 @@ var app = {
 
 nodeWeixinConfig.app.init(app);
 
-nodeWeixinSettings.registerSet(function () { });
+nodeWeixinSettings.registerSet(function() {});
 
-nodeWeixinSettings.registerGet(function () { });
+nodeWeixinSettings.registerGet(function() {});
 
 // 调整TIME_GAP来避免重复请求
 // 默认是500秒，基本上不会出现失效的情况
 nodeWeixinAuth.TIME_GAP = 60;
 
 //手动得到accessToken
-nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
+nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function(error, json) {
   var accessToken = json.access_token;
 });
 
-router.get('/', function (req, res) {
+router.get('/', function(req, res) {
   res.send("Hello! Willcome to Allhaha website weixin API！");
 });
 
 var menu = {
-  "button": [
-    {
-      "type": "scancode_waitmsg",
-      "name": "扫码比价",
-      "key": "rselfmenu_0_0",
-      "sub_button": []
-    }
-  ]
+  "button": [{
+    "type": "scancode_waitmsg",
+    "name": "扫码比价",
+    "key": "rselfmenu_0_0",
+    "sub_button": []
+  }, {
+    "type": "miniprogram",
+    "name": "小程序",
+    "url": "http://mp.weixin.qq.com",
+    "appid": "wx3992094fee9220be",
+    "pagepath": "pages/index.html"
+  }]
 };
 
-nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
+nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function(error, data) {
   //data.errcode === 0
   //data.errmsg === 'ok'
 });
@@ -52,9 +56,9 @@ nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
 
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
-router.get('/auth/ack', function (req, res) {
+router.get('/auth/ack', function(req, res) {
   var data = nodeWeixinAuth.extract(req.query);
-  nodeWeixinAuth.ack(app.token, data, function (error, data) {
+  nodeWeixinAuth.ack(app.token, data, function(error, data) {
     if (!error) {
       res.send(data);
       return;
@@ -74,7 +78,7 @@ router.get('/auth/ack', function (req, res) {
 });
 
 //在http请求里的处理方式
-router.post('/auth/ack', function (req, res) {
+router.post('/auth/ack', function(req, res) {
   var reply = nodeWeixinMessage.reply;
   var message = req.body;
   console.log("Message: ");
@@ -90,13 +94,13 @@ router.post('/auth/ack', function (req, res) {
 
       console.time("HTTPRequest:");
       var eanCode = scanCodes[1].length == 12 ? "0" + scanCodes[1] : scanCodes[1];
-      request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
+      request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function(error, response, body) {
         console.timeEnd("HTTPRequest:");
-        
-        nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
+
+        nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function(error, json) {
           var accessToken = json.access_token;
           console.log(accessToken);
-          request('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + accessToken + '&openid=' + message.xml.FromUserName + '&lang=zh_CN', function (error, response, body) {
+          request('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + accessToken + '&openid=' + message.xml.FromUserName + '&lang=zh_CN', function(error, response, body) {
             var result = JSON.parse(body);
             console.log(result);
           });
