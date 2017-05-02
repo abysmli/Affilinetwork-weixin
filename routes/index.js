@@ -42,9 +42,9 @@ var menu = {
   }, {
     "type": "miniprogram",
     "name": "小程序",
-    "url": "http://mp.weixin.qq.com",
+    "url": "https://allhahaha.com",
     "appid": "wx3992094fee9220be",
-    "pagepath": "pages/index.html"
+    "pagepath": "pages/index"
   }]
 };
 
@@ -125,7 +125,7 @@ router.post('/auth/ack', function(req, res) {
             return res.send(news);
           } else {
             console.log('Failed');
-            var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "产品未找到，我们将及时添加!");
+            var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "您搜索的产品（条形码：" + eanCode + "）还未入库，我们将优先添加！");
             return res.send(text);
           }
         }
