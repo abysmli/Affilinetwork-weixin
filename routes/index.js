@@ -125,7 +125,7 @@ router.post('/auth/ack', function(req, res) {
             return res.send(news);
           } else {
             console.log('Failed');
-            var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "您搜索的产品（条形码：" + eanCode + "）还未入库，我们将优先添加！");
+            var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "您搜索的产品（条形码：" + eanCode + "）还未入库，我们将优先添加！更多问题请联系客服微信：allhaha_com");
             return res.send(text);
           }
         }
