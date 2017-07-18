@@ -64,6 +64,7 @@ router.get('/auth/ack', function(req, res) {
   nodeWeixinAuth.ack(app.token, data, function(error, data) {
     if (!error) {
       res.send(data);
+      console.log(data);
       return;
     }
     switch (error) {
@@ -157,6 +158,7 @@ router.get('/auth/ack/get_wx_access_token', function(req,res, next){
     var accessToken,
         refreshToken;
     nodeWeixinOAuth.sucess(app, code, function(error, body){
+        console.log(JSON.parse(body));
         if(!error){
           accessToken = body.access_token;
           openId = body.openId;
