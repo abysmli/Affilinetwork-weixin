@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var nodeWeixinAuth = require('node-weixin-auth');
+var nodeWeixinOAuth = require("node-weixin-oauth");
 var nodeWeixinMenu = require('node-weixin-menu');
 var nodeWeixinConfig = require("node-weixin-config");
 var nodeWeixinSettings = require('node-weixin-settings');
@@ -13,6 +14,8 @@ var app = {
   secret: '391dbdd46e663f8e71f53850f6ce1585',
   token: 'allhaha'
 };
+
+var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack/get_access_token", "STATE", 1);
 
 nodeWeixinConfig.app.init(app);
 
@@ -142,6 +145,31 @@ router.post('/auth/ack', function(req, res) {
     var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "请扫描产品条码！");
     return res.send(text);
   }
+});
+
+router.get('/auth/ack/wx_login', function(req,res, next){
+    res.redirect(weiXinUrl);
+});
+
+//
+router.get('/auth/ack/get_wx_access_token', function(req,res, next){
+    var code = req.query.code;
+    var accessToken,
+        refreshToken;
+    nodeWeixinOAuth.sucess(app, code, function(error, body){
+        if(!error){
+          accessToken = body.access_token;
+          openId = body.openId;
+          refreshToken = body.refresh_token;
+          nodeWeixinOAuth.profile(openId, accessToken, function(error, body){
+            if(!error){
+              console.log(JSON.parse(body));
+            }
+          });
+        }else{
+          console.log(error);
+        }
+    });
 });
 
 module.exports = router;
