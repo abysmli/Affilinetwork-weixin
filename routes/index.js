@@ -79,6 +79,25 @@ router.get('/auth/ack', function(req, res) {
         break;
     }
   });
+
+  var code = req.query.code;
+    var accessToken,
+        refreshToken;
+    nodeWeixinOAuth.sucess(app, code, function(error, body){
+        console.log(JSON.parse(body));
+        if(!error){
+          accessToken = body.access_token;
+          openId = body.openId;
+          refreshToken = body.refresh_token;
+          nodeWeixinOAuth.profile(openId, accessToken, function(error, body){
+            if(!error){
+              console.log(JSON.parse(body));
+            }
+          });
+        }else{
+          res.send(error);
+        }
+    });
 });
 
 //在http请求里的处理方式
