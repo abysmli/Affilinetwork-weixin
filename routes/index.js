@@ -82,7 +82,7 @@ router.get('/auth/ack', function(req, res) {
   var code = req.query.code;
     var accessToken,
         refreshToken;
-    nodeWeixinOAuth.sucess(app, code, function(error, body){
+    nodeWeixinOAuth.success(app, code, function(error, body){
         console.log(JSON.parse(body));
         if(!error){
           accessToken = body.access_token;
