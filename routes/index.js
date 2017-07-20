@@ -15,7 +15,7 @@ var app = {
   token: 'allhaha'
 };
 
-var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack/get_wx_access_token", "STATE", 1);
+var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack/", "STATE", 0);
 
 nodeWeixinConfig.app.init(app);
 
@@ -59,7 +59,7 @@ nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
 
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
-router.get('/auth/ack', function (req, res) {
+router.get('/auth/ack/', function (req, res) {
   // var data = nodeWeixinAuth.extract(req.query);
   // nodeWeixinAuth.ack(app.token, data, function(error, data) {
   //   if (!error) {
@@ -79,8 +79,26 @@ router.get('/auth/ack', function (req, res) {
   //       break;
   //   }
   // });
-  console.log(weiXinUrl);
-  res.redirect(weiXinUrl);
+
+  var code = req.query.code;
+  var accessToken,
+    refreshToken;
+  nodeWeixinOAuth.sucess(app, code, function (error, body) {
+    console.log(JSON.parse(body));
+    if (!error) {
+      accessToken = body.access_token;
+      openId = body.openId;
+      refreshToken = body.refresh_token;
+      nodeWeixinOAuth.profile(openId, accessToken, function (error, body) {
+        if (!error) {
+          console.log(JSON.parse(body));
+        }
+      });
+    } else {
+      console.log(error);
+    }
+  });
+
 });
 
 //在http请求里的处理方式
