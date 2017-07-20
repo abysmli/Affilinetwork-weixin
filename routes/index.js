@@ -83,11 +83,13 @@ router.get('/auth/ack', function(req, res) {
     var accessToken,
         refreshToken;
     nodeWeixinOAuth.success(app, code, function(error, body){
+      console.log(body.access_token + ";" + body.openId);
         console.log(JSON.parse(body));
         if(!error){
           accessToken = body.access_token;
           openId = body.openId;
           refreshToken = body.refresh_token;
+          
           nodeWeixinOAuth.profile(openId, accessToken, function(error, body){
             if(!error){
               console.log(JSON.parse(body));
