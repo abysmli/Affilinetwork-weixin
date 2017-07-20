@@ -15,7 +15,7 @@ var app = {
   token: 'allhaha'
 };
 
-var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack/get_access_token", "STATE", 1);
+var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack", "STATE", 1);
 
 nodeWeixinConfig.app.init(app);
 
