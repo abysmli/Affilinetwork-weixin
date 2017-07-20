@@ -60,26 +60,25 @@ nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function(error, data) {
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
 router.get('/auth/ack', function(req, res) {
-  var data = nodeWeixinAuth.extract(req.query);
-  nodeWeixinAuth.ack(app.token, data, function(error, data) {
-    if (!error) {
-      res.send(data);
-      console.log(data);
-      return;
-    }
-    switch (error) {
-      case 1:
-        res.send(errors.INPUT_INVALID);
-        break;
-      case 2:
-        res.send(errors.SIGNATURE_NOT_MATCH);
-        break;
-      default:
-        res.send(errors.UNKNOWN_ERROR);
-        break;
-    }
-  });
-
+  // var data = nodeWeixinAuth.extract(req.query);
+  // nodeWeixinAuth.ack(app.token, data, function(error, data) {
+  //   if (!error) {
+  //     res.send(data);
+  //     console.log(data);
+  //     return;
+  //   }
+  //   switch (error) {
+  //     case 1:
+  //       res.send(errors.INPUT_INVALID);
+  //       break;
+  //     case 2:
+  //       res.send(errors.SIGNATURE_NOT_MATCH);
+  //       break;
+  //     default:
+  //       res.send(errors.UNKNOWN_ERROR);
+  //       break;
+  //   }
+  // });
   var code = req.query.code;
     var accessToken,
         refreshToken;
