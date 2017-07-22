@@ -161,7 +161,7 @@ router.post('/auth/ack', function (req, res) {
       return res.send(text);
     } else if (message.xml.MsgType == 'text') {
       var content = message.xml.Content;
-      if (content.substring(0, 3) == "EAN") {
+      if (content.substring(0, 3).toLowerCase() == "ean") {
         var eanCode = content.substring(3, content.length);
         request('http://allhaha.com/weixin/prerequest?value=' + eanCode + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
           console.timeEnd("HTTPRequest:");
