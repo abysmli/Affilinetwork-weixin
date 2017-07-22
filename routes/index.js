@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var utf8 = require('utf8');
 var nodeWeixinAuth = require('node-weixin-auth');
 var nodeWeixinOAuth = require("node-weixin-oauth");
 var nodeWeixinMenu = require('node-weixin-menu');
@@ -198,7 +199,7 @@ router.post('/auth/ack', function (req, res) {
           }
         });
       } else {
-        request('http://allhaha.com/weixin/prerequest?content=' + content + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
+        request('http://allhaha.com/weixin/prerequest?content=' + utf8.encode(content) + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
           console.timeEnd("HTTPRequest:");
           nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
             var accessToken = json.access_token;
@@ -216,7 +217,7 @@ router.post('/auth/ack', function (req, res) {
               console.log('Success');
               var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
                 title: "点击查看搜索结果",
-                description: "总计找到了" + result.Sum + "款产品",
+                description: "关键词：" + content + "\n总计找到了" + result.Sum + "款产品",
                 url: 'http://allhaha.com/filter?search=' + content,
               }]);
               return res.send(news);
