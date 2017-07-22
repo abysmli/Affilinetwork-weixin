@@ -197,6 +197,36 @@ router.post('/auth/ack', function (req, res) {
             }
           }
         });
+      } else {
+        request('http://allhaha.com/weixin/prerequest?content=' + content + '&from=' + message.xml.FromUserName + '&type=barcode', function (error, response, body) {
+          console.timeEnd("HTTPRequest:");
+          nodeWeixinAuth.tokenize(nodeWeixinSettings, app, function (error, json) {
+            var accessToken = json.access_token;
+            console.log(accessToken);
+            request('https://api.weixin.qq.com/cgi-bin/user/info?access_token=' + accessToken + '&openid=' + message.xml.FromUserName + '&lang=zh_CN', function (error, response, body) {
+              var result = JSON.parse(body);
+              console.log(result);
+            });
+          });
+          if (!error && response.statusCode == 200) {
+            var result = JSON.parse(body);
+            console.log("Result: ");
+            console.log(result);
+            if (result.Result == 'success') {
+              console.log('Success');
+              var news = reply.news(message.xml.ToUserName, message.xml.FromUserName, [{
+                title: "点击查看搜索结果",
+                description: "总计找到了" + result.Sum + "款产品",
+                url: 'http://allhaha.com/filter?search=' + content,
+              }]);
+              return res.send(news);
+            } else {
+              console.log('Failed');
+              var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "您搜索的产品" + content + "还未入库，我们将优先添加！更多问题请联系客服微信：allhaha_com");
+              return res.send(text);
+            }
+          }
+        });
       }
 
       //  Message:
