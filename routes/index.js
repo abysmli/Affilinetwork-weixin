@@ -19,15 +19,9 @@ var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth
 
 nodeWeixinConfig.app.init(app);
 
-<<<<<<< HEAD
 nodeWeixinSettings.registerSet(function () { });
-
 nodeWeixinSettings.registerGet(function () { });
-=======
-nodeWeixinSettings.registerSet(function () {});
 
-nodeWeixinSettings.registerGet(function () {});
->>>>>>> 9fb035230c9a656d79dacde5e59e7aff7e2e0acc
 
 // 调整TIME_GAP来避免重复请求
 // 默认是500秒，基本上不会出现失效的情况
