@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request');
 var nodeWeixinAuth = require('node-weixin-auth');
+var nodeWeixinOAuth = require("node-weixin-oauth");
 var nodeWeixinMenu = require('node-weixin-menu');
 var nodeWeixinConfig = require("node-weixin-config");
 var nodeWeixinSettings = require('node-weixin-settings');
@@ -14,11 +15,19 @@ var app = {
   token: 'allhaha'
 };
 
+var weiXinUrl = nodeWeixinOAuth.createURL(app.id, "https://allhahaha.com/wx/auth/ack/", "STATE", 0);
+
 nodeWeixinConfig.app.init(app);
 
+<<<<<<< HEAD
 nodeWeixinSettings.registerSet(function () { });
 
 nodeWeixinSettings.registerGet(function () { });
+=======
+nodeWeixinSettings.registerSet(function () {});
+
+nodeWeixinSettings.registerGet(function () {});
+>>>>>>> 9fb035230c9a656d79dacde5e59e7aff7e2e0acc
 
 // 调整TIME_GAP来避免重复请求
 // 默认是500秒，基本上不会出现失效的情况
@@ -56,26 +65,46 @@ nodeWeixinMenu.create(nodeWeixinSettings, app, menu, function (error, data) {
 
 
 // 微信服务器返回的ack信息是HTTP的GET方法实现的
-router.get('/auth/ack', function (req, res) {
-  var data = nodeWeixinAuth.extract(req.query);
-  nodeWeixinAuth.ack(app.token, data, function (error, data) {
+router.get('/auth/ack/', function (req, res) {
+  // var data = nodeWeixinAuth.extract(req.query);
+  // nodeWeixinAuth.ack(app.token, data, function(error, data) {
+  //   if (!error) {
+  //     res.send(data);
+  //     console.log(data);
+  //     return;
+  //   }
+  //   switch (error) {
+  //     case 1:
+  //       res.send(errors.INPUT_INVALID);
+  //       break;
+  //     case 2:
+  //       res.send(errors.SIGNATURE_NOT_MATCH);
+  //       break;
+  //     default:
+  //       res.send(errors.UNKNOWN_ERROR);
+  //       break;
+  //   }
+  // });
+
+  var code = req.query.code;
+  var accessToken,
+    refreshToken;
+  nodeWeixinOAuth.sucess(app, code, function (error, body) {
+    console.log(JSON.parse(body));
     if (!error) {
-      res.send(data);
-      console.log(data);
-      return;
-    }
-    switch (error) {
-      case 1:
-        res.send(errors.INPUT_INVALID);
-        break;
-      case 2:
-        res.send(errors.SIGNATURE_NOT_MATCH);
-        break;
-      default:
-        res.send(errors.UNKNOWN_ERROR);
-        break;
+      accessToken = body.access_token;
+      openId = body.openId;
+      refreshToken = body.refresh_token;
+      nodeWeixinOAuth.profile(openId, accessToken, function (error, body) {
+        if (!error) {
+          console.log(JSON.parse(body));
+        }
+      });
+    } else {
+      console.log(error);
     }
   });
+
 });
 
 //在http请求里的处理方式
@@ -192,6 +221,33 @@ router.post('/auth/ack', function (req, res) {
     var text = reply.text(message.xml.ToUserName, message.xml.FromUserName, "请扫描产品条码...");
     return res.send(text);
   }
+});
+
+router.get('/auth/ack/wx_login', function (req, res, next) {
+  console.log(weiXinUrl);
+  res.redirect(weiXinUrl);
+});
+
+//
+router.get('/auth/ack/get_wx_access_token', function (req, res, next) {
+  var code = req.query.code;
+  var accessToken,
+    refreshToken;
+  nodeWeixinOAuth.sucess(app, code, function (error, body) {
+    console.log(JSON.parse(body));
+    if (!error) {
+      accessToken = body.access_token;
+      openId = body.openId;
+      refreshToken = body.refresh_token;
+      nodeWeixinOAuth.profile(openId, accessToken, function (error, body) {
+        if (!error) {
+          console.log(JSON.parse(body));
+        }
+      });
+    } else {
+      console.log(error);
+    }
+  });
 });
 
 module.exports = router;

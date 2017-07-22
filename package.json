@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "debug": "node %NODE_DEBUG_OPTION% ./node_modules/path/to/webpack-dev-server.js --inline --hot -d"
   },
   "dependencies": {
     "body-parser": "~1.15.2",
